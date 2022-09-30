@@ -9,9 +9,9 @@ app = Celery('store')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 app.conf.beat_schedule = {
-    'report-every-day-at-11:55': {
+    'report-every-week-saturday-at-11:55': {
         'task': 'order.tasks.daily_report',
-        'schedule': crontab(hour=11, minute=55)
+        'schedule': crontab(hour=11, minute=55, day_of_week=6)
     },
 }
 app.conf.timezone = 'UTC'
