@@ -1,0 +1,37 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+{% endblock %}
+{% block content %}
+
+<section class="elements">
+    <h6><a href="{% url 'shop:author_list' %}"> Back to authors </a></h6>
+    <div class="about_author">
+    <div class="author">
+      <img class="rounded-circle" id="author_img" src="{% if author.image %}
+      {{ author.image.url }}{% else %} {% static 'img/no_image.png' %}{% endif %}" alt=""> 
+      <div class="author_short">
+        <h1 class="author_name">{{ author.name }}</h1>
+        <br class="clear">
+        <p>
+          {{ author.bio }}
+      </p>
+      </div>
+        
+    </div>
+    <h3>Most popular works:</h3>
+      <div class="books">
+      <br class="clear">
+      {% for book in author.books.all  %}
+      <div class="card">
+        <img src="{% if book.image %} {{ book.image_landscape.url }} {% endif %}" class="card-img-top"  alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{ book.name }}</h5> <p>By {{ book.author }}</p>
+          <a href="{{ book.get_absolute_url }}" class="btn btn-primary">Details</a>
+        </div>
+      </div>
+      {% endfor %}  
+      </div>
+    </div>
+  </section>
+{% endblock %}

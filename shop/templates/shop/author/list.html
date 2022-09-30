@@ -1,0 +1,28 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+{% endblock %}
+{% block content %}
+<link href="{% static 'shop/css/list.css' %}" rel="stylesheet">
+    <div id="main" class="author-list">
+    {% if alphabet %}
+    <div class="wrapper">
+        {% for letter in alphabet %}
+        <span class="letter {{ letter }} ">
+            <span><a href="{% url 'shop:author_starts_with' start_with_letter=letter %}">{{ letter|upper }}</a></span>
+        </span>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% if authors %}
+            {% for author in authors %}
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                  <p><a href="{{ author.get_absolute_url }}">{{ author.name }}</a></p>
+                </div>
+              </div>
+            {% endfor %}
+    {% endif %}
+    </div>
+
+{% endblock %}
