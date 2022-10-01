@@ -1,7 +1,7 @@
 {% extends "shop/base.html" %}
 {% load static %}
 {% block title %}
-{{ form.instance.username }}
+{{ user_profile.username }}
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -12,15 +12,15 @@
         <div class="card">
           <div class="card-body">
             <div class="d-flex flex-column align-items-center text-center">
-              <img src="{% if user.profile.photo %} {{ user.profile.photo.url }} 
+              <img src="{% if user_profile.profile.photo %} {{ user_profile.profile.photo.url }} 
               {% else %} {% static 'accounts/img/blank_profile.jpg' %} {% endif %}"
-               alt="" class="rounded-circle" width="150">
+               alt="" class="rounded-circle" width="150" height="150">
               <div class="mt-3">
-                <h4>{{ form.instance.username }}</h4>
-                <p class="text-secondary mb-1">{{ form.instance.profile.date_of_birth }}</p>
-                <p class="text-muted font-size-sm">Since {{ form.instance.date_joined }}</p>
-                {% if request.user.username == form.instance.username %}
-                  <p class="text-secondary mb-1"><a href="{% url 'accounts:profile_update' pk=form.instance.profile.id %}">Update picture</a></p>
+                <h4>{{ user_profile.username }}</h4>
+                <p class="text-secondary mb-1">{{ user_profile.profile.date_of_birth }}</p>
+                <p class="text-muted font-size-sm">Since {{ user_profile.date_joined }}</p>
+                {% if request.user.id == user_profile.id %}
+                  <p class="text-secondary mb-1"><a href="{% url 'accounts:profile_update' pk=user_profile.profile.id %}">Update picture</a></p>
                 {% endif %}
               </div>
             </div>
@@ -35,7 +35,7 @@
                 <h6 class="mb-0">Full Name</h6>
               </div>
               <div class="col-sm-9 text-secondary">
-                {{ form.instance.first_name }} {{ form.instance.last_name}}
+                {{ profile.first_name }} {{ profile.last_name}}
               </div>
             </div>
             <hr>
@@ -44,11 +44,24 @@
                 <h6 class="mb-0">Email</h6>
               </div>
               <div class="col-sm-9 text-secondary">
-                {{ form.instance.email }}
+                {{ user_profile.email }}
+              </div>
+            </div>
+            {% if request.user.id == user_profile.id %}
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Orders</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {% for order in user_profile.orders.all %}
+                {{ order.id }},
+                {% endfor %}
               </div>
             </div>
             <hr>
-            {% if request.user.username == form.instance.username %}
+            {% endif %}
+            {% if request.user.id == user_profile.id %}
             <form method="POST" enctype="multipart/form-data">
               {% csrf_token %}
                   <fieldset class="form-group">
@@ -56,7 +69,7 @@
                       <div class="form-row">
                       {{ form.as_p }}
                     </div>
-                      <a href="">Change password?</a>
+                      <a href="{% url 'accounts:profile_change_password' user_profile.id%}">Change password?</a>
                   </fieldset>
                   <div class="form-group">
                       <button class="btn btn-outline-info" type="submit">Update</button>

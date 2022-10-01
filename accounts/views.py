@@ -19,6 +19,8 @@ class RegisterUserView(generic.CreateView):
 class ProfileUpdateView(mixins.LoginRequiredMixin, generic.UpdateView):
     template_name = 'accounts/profile/profile.html'
     model  = User
+    context_object_name = 'user_profile'
+    queryset = User.objects.prefetch_related('orders', 'profile')
     form_class = UpdateUserForm
     def get_success_url(self):
         return reverse_lazy('accounts:profile', args = [self.kwargs['pk']])
